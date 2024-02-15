@@ -5,12 +5,9 @@ import {
   Paper,
   TextField,
   Typography,
-  Radio,
-  FormControlLabel,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { RadioGroup } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -20,58 +17,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import Info from "./Info";
-
-function RHFAutoComplete({ name, control, options, isSubmitting, helperText }) {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      rules={{ required: `${name} is required` }}
-      render={({ field, fieldState: { error } }) => {
-        const { onChange, value, ref } = field;
-        return (
-          <Box
-            sx={{
-              position: "relative",
-            }}
-          >
-            <Autocomplete
-              disabled={isSubmitting}
-              fullWidth
-              error={!!error}
-              disablePortal
-              id="university"
-              options={options}
-              getOptionLabel={(option) => option.label}
-              onChange={(event, newValue) => {
-                onChange(newValue ? newValue.value : null);
-              }}
-              value={
-                value
-                  ? options.find((obj) => {
-                      return obj.value === value;
-                    }) ?? null
-                  : null
-              }
-              renderInput={(params) => (
-                <TextField
-                  disabled={isSubmitting}
-                  color={!error ? "success" : "error"}
-                  {...params}
-                  label={!error ? name : error.message}
-                  inputRef={ref}
-                  error={!!error}
-                  helperText={helperText}
-                />
-              )}
-            />
-          </Box>
-        );
-      }}
-    />
-  );
-}
+import Info from "../Info";
 
 export function Form() {
   const [severity, setSeverity] = useState("alert");
@@ -79,30 +25,15 @@ export function Form() {
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [response, setResponse] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("Cash");
 
   const paymentRef = useRef(null);
   console.log("Abdo Tolba was here :)");
-  const handleClick = () => {
-    setOpen(true);
-  };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const validateAge = (value) => {
-    const birthDate = new Date(value);
-    const currentDate = new Date();
-    const age = currentDate.getFullYear() - birthDate.getFullYear();
-
-    const minAge = 5;
-    const maxAge = 60;
-
-    return (age >= minAge && age <= maxAge) || `${minAge} : ${maxAge} year old`;
-  };
 
   const onSubmit = async (data) => {
     // const captchaTempValue = await recaptchaRef.current.executeAsync();
@@ -132,17 +63,17 @@ export function Form() {
       component={"form"}
       onSubmit={handleSubmit(onSubmit)}
       sx={{
-        margin: {
-          sm: "10vw 10vw 5vw 30vw",
-          xs: "3ch",
-        },
+        // margin: {
+        //   sm: "10vw 10vw 5vw 30vw",
+        //   xs: "3ch",
+        // },
 
-        display: "flex",
-        flexDirection: "column",
-        gap: "3ch",
-        "& .MuiGrid-container": {},
+        // display: "flex",
+        // flexDirection: "column",
+        // gap: "3ch",
+        // "& .MuiGrid-container": {},
 
-        //  ! Make the helper text red and bold. also on the top of the input
+        // //  ! Make the helper text red and bold. also on the top of the input
         "& p.MuiFormHelperText-root": {
           // position: "absolute",
           // color: "#f44336",
@@ -157,21 +88,21 @@ export function Form() {
           },
         },
 
-        "& .MuiFormLabel-root": {
-          color: "white",
-          fontWeight: "bolder",
-        },
+        // "& .MuiFormLabel-root": {
+        //   color: "white",
+        //   fontWeight: "bolder",
+        // },
 
-        "& .MuiPaper-root.myPaper": {
-          border: "1px solid white",
-        },
+        // "& .MuiPaper-root.myPaper": {
+        //   border: "1px solid white",
+        // },
 
-        "& .myGridLabel": {
-          display: {
-            sm: "flex",
-            xs: "none",
-          },
-        },
+        // "& .myGridLabel": {
+        //   display: {
+        //     sm: "flex",
+        //     xs: "none",
+        //   },
+        // },
       }}
     >
       {/* Header content for description */}
@@ -252,8 +183,8 @@ export function Form() {
       <Paper
         className="myPaper"
         sx={{
-          background:
-            "linear-gradient(180deg, rgba(106,106,106,.7) 0%, rgba(31,31,31,1) 75%, rgba(105,105,105,.5) 100%)",
+          // background:
+          //   "linear-gradient(180deg, rgba(106,106,106,.7) 0%, rgba(31,31,31,1) 75%, rgba(105,105,105,.5) 100%)",
           color: "white",
 
           p: "3ch",
@@ -310,12 +241,49 @@ export function Form() {
               alignItems: "center",
             }}
           >
+            <Grid className="myGridLabel" item xs={0} sm={5}>
+              <Typography className="myLabel" variant="p">
+                Number of Members
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={7}>
+              <TextField
+                disabled={isSubmitting}
+                color={!errors.numberOfMembers ? "success" : "success"}
+                variant="outlined"
+                fullWidth
+                type="number"
+                label={
+                  errors.numberOfMembers
+                    ? errors.numberOfMembers.message
+                    : "Number of Members"
+                }
+                {...register("numberOfMembers", {
+                  required: "Number of members in the project is required",
+                  // min 1, max 10
+                  min: { value: 1, message: "Min is 1" },
+                  max: { value: 10, message: "Max is 10" },
+                })}
+                error={!!errors.numberOfMembers}
+                helperText={"The number of members in the project"}
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             <Grid className={"myGridLabel"} item sm={5} xs={0}>
               <Typography className={"myLabel"} variant="p">
                 {" "}
                 Project Brief Details{" "}
               </Typography>
             </Grid>
+
             <Grid item sm={7} xs={12}>
               <TextField
                 disabled={isSubmitting}
@@ -437,13 +405,13 @@ export function Form() {
         <br />
 
         <LoadingButton
-          type="submit"
+          type="button"
           variant="contained"
           sx={{ display: "block" }}
           color="success"
-          loading={loading}
+          // loading={loading}
         >
-          Submit
+          Next
         </LoadingButton>
       </Paper>
       <Info

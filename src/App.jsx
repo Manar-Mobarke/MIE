@@ -1,9 +1,9 @@
-import Form from "./Form";
+import Projects from "./components/Projects";
 
 export default function App() {
   return (
     <>
-      <Form />
+      <Projects />
     </>
   );
 }

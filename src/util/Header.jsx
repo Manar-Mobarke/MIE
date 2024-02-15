@@ -1,71 +1,26 @@
 "use strict";
-import React, { useState, useEffect } from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import { Box, Menu, MenuItem } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import AddToQueueIcon from "@mui/icons-material/AddToQueue";
-import Link from "@mui/material/Link";
 import DribbleButton from "./DribbleButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Form from "../Form";
 
 export default function Header() {
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  }));
-
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    width: "100%",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      [theme.breakpoints.up("sm")]: {
-        width: "12ch",
-        "&:focus": {
-          width: "20ch",
-        },
-      },
-    },
-  }));
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const [dribble, setDribble] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     const visitedForm = window.localStorage.getItem("visitedForm");
@@ -77,6 +32,11 @@ export default function Header() {
       setDribble(false);
     }
   }, []);
+
+  const handleClickIcon = () => {
+    handleClickOpen();
+    setDribble(false);
+  };
 
   return (
     <AppBar
@@ -136,13 +96,7 @@ export default function Header() {
           color="inherit"
           aria-label="menu"
           sx={{ mr: 2 }}
-          onClick={() => {
-            if (typeof window !== "undefined") {
-              window.localStorage.setItem("visitedForm", "true");
-            }
-            setDribble(false);
-            window.open("https://forms.gle/aPy7Ak15BJVDfXSm9", "_blank");
-          }}
+          onClick={handleClickIcon}
 
           // LinkComponent={Link}
           // target="_blank"
@@ -177,6 +131,23 @@ export default function Header() {
               />
             </Search> */}
       </Toolbar>
+      <Dialog onClose={handleClose} open={open}>
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography>Add your project</Typography>
+          <IconButton onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Form />
+        </DialogContent>
+      </Dialog>
     </AppBar>
   );
 }
