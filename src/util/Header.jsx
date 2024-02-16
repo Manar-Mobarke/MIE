@@ -8,7 +8,7 @@ import { Box, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import AddToQueueIcon from "@mui/icons-material/AddToQueue";
 import DribbleButton from "./DribbleButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Form from "../Form";
+import Form from "../components/Form";
 
 export default function Header() {
   const [dribble, setDribble] = useState(false);
@@ -35,6 +35,8 @@ export default function Header() {
 
   const handleClickIcon = () => {
     handleClickOpen();
+    // set local storage
+    window.localStorage.setItem("visitedForm", true);
     setDribble(false);
   };
 

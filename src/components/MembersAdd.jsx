@@ -6,18 +6,16 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-const steps = [
-  "Select campaign settings",
-  "Create an ad group",
-  "Create an ad",
-];
-
-export default function HorizontalLinearStepper() {
+export default function MembersAdd({ numberOfMembers }) {
+  const steps = Array.from(
+    { length: numberOfMembers },
+    (_, index) => `Member ${index + 1}`
+  );
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
   const isStepOptional = (step) => {
-    return step === 1;
+    return step === -1;
   };
 
   const isStepSkipped = (step) => {
